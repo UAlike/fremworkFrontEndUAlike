@@ -7,7 +7,8 @@ Styles directory:
 ----/components     : components. for example, sidebar, nav, toolbar, 
                       that may consist from one or more modules
 ----/mixins         : mixins dir. for re-usable parts of code
-----/modules        : modules. Partials, such as buttons, icons etc, that are re-used to build components
+----/modules        : modules. Partials, such as buttons, icons etc, that are 
+                      re-used to build components
 ----/pages          : specific styles for pages
 ----/partials       : partials of the page
 --variables.less    : less file with custom variables
