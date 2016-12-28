@@ -2,7 +2,7 @@
 
 Styles directory:
 
-
+<pre>
 --/style
 ----/components     : components. for example, sidebar, nav, toolbar, that may consist from one or more modules
 ----/mixins         : mixins dir. for re-usable parts of code
@@ -11,7 +11,7 @@ Styles directory:
 ----/partials       : partials of the page
 --variables.less    : less file with custom variables
 --main.less         : main less file, that is the entry point for css compilation
-
+</pre>
 
 Templates directory:
 TBD.
