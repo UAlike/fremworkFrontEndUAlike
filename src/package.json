@@ -1,0 +1,17 @@
+{
+  "name": "UAlike-Fremwork-Front-End",
+  "version": "1.0.0",
+  "description": "UAlike Fremwork Front-End",
+  "repository": "git@github.com:UAlike/fremworkFrontEndUAlike.git",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "@UAlikeTeam",
+  "license": "GNU",
+  "devDependencies": {
+    "browser-sync": "^2.18.5",
+    "gulp": "^3.9.1",
+    "gulp-load-plugins": "^1.4.0"
+  }
+}
