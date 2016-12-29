@@ -6,8 +6,11 @@ let gulp = require('gulp'),
     browserSync = require('browser-sync'),
     reload = browserSync.reload;
 
+// production mode (see build task)
+let isProduction = false;
 
-useSourceMaps = false;
+// style source maps
+let useSourceMaps = false;
 
 // Server config
 // --------------
@@ -17,11 +20,12 @@ let config = {
     baseDir: "../."
   },
   host: 'localhost',
-  port: 8000,
+  port: 8080,
   logPrefix: ''
 };
 
-// MAIN PATHS
+// Main paths
+// ----------
 let paths = {
   app: '../dist/',
   // markup: 'jade/',
@@ -31,22 +35,30 @@ let paths = {
   fonts: 'fonts/'
 };
 
-// SOURCES CONFIG
+// Source config
+// --------------
 let source = {
   index: '../',
-  // indextemplates: {
-  //   index: [paths.components + 'index.*'],
-  //   views: [paths.components + '**/*.jade*', '!' + paths.components + 'index.*']
-  // },
   styles: {
     app: [paths.styles + '*.*'],
     watch: [paths.styles + '**/*']
   }
 };
 
-// Main paths
-// ----------
+// Build target config
+// -------------------
+let build = {
+  styles: paths.app + 'css',
+};
 
+
+// Plugins options
+// ---------------
+let cssnanoOptions = {
+  safe: true,
+  discardUnused: false, // no remove @font-face
+  reduceIdents: false // no change on @keyframes names
+};
 
 
 //-- TASKS
@@ -65,7 +77,7 @@ gulp.task('styles:app', () => {
     .pipe($.if(useSourceMaps, $.sourcemaps.init()))
     .pipe($.sass())
     .on('error', handleError)
-    .pipe($.if(isProduction, $.cssnano(cssnanoOpts)))
+    .pipe($.if(isProduction, $.cssnano(cssnanoOptions)))
     .pipe($.if(useSourceMaps, $.sourcemaps.write()))
     .pipe(gulp.dest(build.styles))
     .pipe(reload({
@@ -81,13 +93,7 @@ gulp.task('styles:app', () => {
 gulp.task('watch', function() {
   log('Watching source files..');
 
-  //gulp.watch(source.scripts, ['scripts:app']);
   gulp.watch(source.styles.watch, ['styles:app']);
-  // gulp.watch(source.templates.views, ['templates:views']);
-  // gulp.watch(source.templates.index, ['templates:index']);
-  // gulp.watch(source.templates.index, ['image:app']);
-  // gulp.watch(source.templates.index, ['fonts:app']);
-
 });
 
 // Serve files with auto reaload
@@ -103,6 +109,7 @@ gulp.task('browsersync', function() {
   });
 
 });
+
 gulp.task('usesources', function() {
   useSourceMaps = true;
 });
