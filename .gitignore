@@ -52,3 +52,6 @@ fabric.properties
 *.iml
 out
 gen
+
+# SRC
+/src/node_modules
