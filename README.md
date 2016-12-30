@@ -14,6 +14,7 @@ Styles directory:
 </pre>
 
 Templates directory:
+Pug templates folder
 TBD.
 
 
