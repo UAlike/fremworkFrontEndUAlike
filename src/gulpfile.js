@@ -3,6 +3,9 @@ let gulp = require('gulp'),
     path = require('path'),
     $ = require('gulp-load-plugins')(),
     gulpsync = $.sync(gulp),
+    gulpif = require('gulp-if'),
+    pug = require('gulp-pug'),
+    emitty = require('emitty').setup('template', 'pug'),
     browserSync = require('browser-sync'),
     reload = browserSync.reload;
 
@@ -94,6 +97,8 @@ gulp.task('watch', function() {
   log('Watching source files..');
 
   gulp.watch(source.styles.watch, ['styles:app']);
+  gulp.watch('template/**/*.pug', ['templates']);
+
 });
 
 // Serve files with auto reaload
@@ -123,6 +128,22 @@ gulp.task('assets', [
   //'image:app',
   //'fonts:app'
 ]);
+
+gulp.task('templates', () =>
+  new Promise((resolve, reject) => {
+  emitty.scan(global.changedStyleFile).then(() => {
+  gulp.src('template/pages/*.pug')
+  .pipe(gulpif(global.watch, emitty.filter(global.emittyChangedFile)))
+  .pipe(pug({ pretty: true }))
+  .pipe(gulp.dest('../'))
+  .on('end', resolve)
+  .on('error', reject)
+  .pipe(reload({
+    stream: true
+  }));
+});
+})
+);
 
 
 // default (no minify)
