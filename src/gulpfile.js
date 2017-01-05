@@ -95,7 +95,7 @@ gulp.task('styles:app', () => {
 });
 
 gulp.task('templates:static', () => {
-
+  log('Building application static templates..');
   new Promise((resolve, reject) => {
     emitty.scan(global.changedStyleFile).then(() => {
       gulp.src(source.template.page)
@@ -109,7 +109,6 @@ gulp.task('templates:static', () => {
         }));
     });
   })
-  console.log(source.template.app);
 });
 
 
