@@ -4,7 +4,6 @@ let gulp = require('gulp'),
     $ = require('gulp-load-plugins')(),
     gulpsync = $.sync(gulp),
     gulpif = require('gulp-if'),
-    pug = require('gulp-pug'),
     emitty = require('emitty').setup('template', 'pug'),
     browserSync = require('browser-sync'),
     reload = browserSync.reload;
@@ -31,7 +30,7 @@ let config = {
 // ----------
 let paths = {
   app: '../dist/',
-  // markup: 'jade/',
+  template: 'template/',
   styles: 'style/',
   components: 'app/',
   img: 'images/',
@@ -42,15 +41,22 @@ let paths = {
 // --------------
 let source = {
   index: '../',
+  template: {
+    page:     paths.template + 'pages/*.pug',
+    watch:    paths.template + '**/*'
+  },
   styles: {
-    app: [paths.styles + '*.*'],
-    watch: [paths.styles + '**/*']
+    app:    [paths.styles + '*.*'],
+    watch:  [paths.styles + '**/*']
   }
 };
 
 // Build target config
 // -------------------
 let build = {
+  template:{
+    static: paths.app
+  },
   styles: paths.app + 'css',
 };
 
@@ -88,6 +94,24 @@ gulp.task('styles:app', () => {
     }));
 });
 
+gulp.task('templates:static', () => {
+
+  new Promise((resolve, reject) => {
+    emitty.scan(global.changedStyleFile).then(() => {
+      gulp.src(source.template.page)
+        .pipe(gulpif(global.watch, emitty.filter(global.emittyChangedFile)))
+        .pipe($.pug({ pretty: true }).on('error', handleError))
+        .pipe(gulp.dest(build.template.static))
+        .on('end', resolve)
+        .on('error', reject)
+        .pipe(reload({
+          stream: true
+        }));
+    });
+  })
+  console.log(source.template.app);
+});
+
 
 // WATCH
 //---------------
@@ -97,7 +121,7 @@ gulp.task('watch', function() {
   log('Watching source files..');
 
   gulp.watch(source.styles.watch, ['styles:app']);
-  gulp.watch('template/**/*.pug', ['templates']);
+  gulp.watch(source.template.watch, ['templates:static']);
 
 });
 
@@ -122,28 +146,13 @@ gulp.task('usesources', function() {
 // ----------
 gulp.task('assets', [
   //'scripts:app',
-  'styles:app'
+  'styles:app',
+  'templates:static'
   //'templates:index',
   //'templates:views',
   //'image:app',
   //'fonts:app'
 ]);
-
-gulp.task('templates', () =>
-  new Promise((resolve, reject) => {
-  emitty.scan(global.changedStyleFile).then(() => {
-  gulp.src('template/pages/*.pug')
-  .pipe(gulpif(global.watch, emitty.filter(global.emittyChangedFile)))
-  .pipe(pug({ pretty: true }))
-  .pipe(gulp.dest('../'))
-  .on('end', resolve)
-  .on('error', reject)
-  .pipe(reload({
-    stream: true
-  }));
-});
-})
-);
 
 
 // default (no minify)
