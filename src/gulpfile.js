@@ -9,17 +9,17 @@ let gulp = require('gulp'),
     reload = browserSync.reload;
 
 // production mode (see build task)
-let isProduction = false;
+let isProduction = true;
 
 // style source maps
-let useSourceMaps = false;
+let useSourceMaps = true;
 
 // Server config
 // --------------
 
 let config = {
   server: {
-    baseDir: "../."
+    baseDir: "../dist/"
   },
   host: 'localhost',
   port: 8080,
@@ -61,13 +61,16 @@ let build = {
 };
 
 
-// Plugins options
+// Supported options
 // ---------------
-let cssnanoOptions = {
-  safe: true,
-  discardUnused: false, // no remove @font-face
-  reduceIdents: false // no change on @keyframes names
-};
+let supported = [
+  'last 2 versions',
+  'safari >= 8',
+  'ie >= 10',
+  'ff >= 20',
+  'ios 6',
+  'android 4'
+];
 
 
 //-- TASKS
@@ -86,7 +89,9 @@ gulp.task('styles:app', () => {
     .pipe($.if(useSourceMaps, $.sourcemaps.init()))
     .pipe($.sass())
     .on('error', handleError)
-    .pipe($.if(isProduction, $.cssnano(cssnanoOptions)))
+    .pipe($.if(isProduction, $.cssnano({
+      autoprefixer: {browsers: supported, add: true}
+    })))
     .pipe($.if(useSourceMaps, $.sourcemaps.write()))
     .pipe(gulp.dest(build.styles))
     .pipe(reload({
