@@ -9,10 +9,10 @@ let gulp = require('gulp'),
     reload = browserSync.reload;
 
 // production mode (see build task)
-let isProduction = true;
+const isProduction = false;
 
 // style source maps
-let useSourceMaps = true;
+let useSourceMaps = !isProduction;
 
 // Server config
 // --------------
