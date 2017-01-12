@@ -1,15 +1,22 @@
-// Test build
-// ----------
-body {
-  background: cornflowerblue;
-}
-ul{
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-li{
-  list-style: none;
-  margin-left: 10px;
-  color: red;
-}
+//Settings:
+// No settings for now. The idea behind this section is to create  a variables for
+
+//Core:
+@import "variables";
+
+//Mixins:
+@import "mixins/buttons";
+
+//Helpers:
+@import "../node_modules/normalize.css/normalize";
+
+//Components | Blocks
+// the components are adding from bottom to the top of complexity.
+// first - the primitive blocks (modules folder)
+// last - pages - the specific styles for the set of building blocks
+
+
+@import "modules/buttons";
+@import "components/navbar";
+@import "partials/footer";
+@import "pages/index";

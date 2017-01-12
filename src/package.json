@@ -22,5 +22,8 @@
     "gulp-sync": "^0.1.4",
     "gulp-util": "^3.0.8",
     "pug": "^2.0.0-beta6"
+  },
+  "dependencies": {
+    "normalize.css": "^5.0.0"
   }
 }
