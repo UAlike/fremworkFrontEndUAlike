@@ -55,3 +55,6 @@ gen
 
 # SRC
 /src/node_modules
+/src/style/modules/_sprite.scss
+/dist
+

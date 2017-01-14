@@ -33,7 +33,7 @@ let paths = {
   template: 'template/',
   styles: 'style/',
   components: 'app/',
-  img: 'images/',
+  images: 'images/',
   fonts: 'fonts/'
 };
 
@@ -48,6 +48,10 @@ let source = {
   styles: {
     app:    [paths.styles + '*.*'],
     watch:  [paths.styles + '**/*']
+  },
+  images: {
+    app: [paths.images + '*.*'],
+    sprite: [paths.images + 'sprite/**/*.png']
   }
 };
 
@@ -58,6 +62,7 @@ let build = {
     static: paths.app
   },
   styles: paths.app + 'css',
+  images: paths.app + 'images',
 };
 
 
@@ -97,6 +102,29 @@ gulp.task('styles:app', () => {
     .pipe(reload({
       stream: true
     }));
+});
+
+// Images TODO: Need to add images optimization and add watch
+// ----------------------------------------------------------
+gulp.task('images:app', () => {
+  log('Copy all images from root folder');
+
+  return gulp.src(source.images.app)
+    .pipe(gulp.dest(build.images));
+});
+
+// Sprite images
+// -------------
+gulp.task('images:sprite', () => {
+  log('Bilding Sprite images');
+
+  var spriteData = gulp.src(source.images.sprite).pipe($.spritesmith({
+    imgName: 'sprite.png',
+    cssName: '_sprite.scss'
+  }));
+
+  spriteData.img.pipe(gulp.dest(build.images));
+  spriteData.css.pipe(gulp.dest(paths.styles + 'modules'));
 });
 
 gulp.task('templates:static', () => {
@@ -150,11 +178,12 @@ gulp.task('usesources', function() {
 // ----------
 gulp.task('assets', [
   //'scripts:app',
+  'images:app',
+  'images:sprite',
   'styles:app',
   'templates:static'
   //'templates:index',
   //'templates:views',
-  //'image:app',
   //'fonts:app'
 ]);
 

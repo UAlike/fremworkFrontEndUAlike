@@ -1,15 +1,27 @@
-//Page - related styles;
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+body{
+  font-family: 'Roboto', sans-serif;
+}
+.container{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
 
-body {
-  background: cornflowerblue;
-}
-ul{
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-li{
-  list-style: none;
-  margin-left: 10px;
-  color: red;
+  .ualike-logo{
+    background: url("../images/ualike-logo.svg") center center no-repeat;
+    width: 500px;
+    height: 500px;
+    margin: 0 auto 30px;
+  }
+  .title{
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  &:hover{
+    .title{
+      transform: translateY(90px)
+    }
+  }
 }
