@@ -21,6 +21,7 @@
     "gulp-sourcemaps": "^1.9.1",
     "gulp-sync": "^0.1.4",
     "gulp-util": "^3.0.8",
+    "gulp.spritesmith": "^6.3.0",
     "pug": "^2.0.0-beta6"
   }
 }

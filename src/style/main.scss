@@ -1,15 +1,7 @@
-// Test build
-// ----------
-body {
-  background: cornflowerblue;
-}
-ul{
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-li{
-  list-style: none;
-  margin-left: 10px;
-  color: red;
-}
+// Includes all styles
+
+@import "modules/sprite"; // variables and mixins for sprite 'gulp.spritesmith'
+
+// Pages
+// -----
+@import "pages/index";
