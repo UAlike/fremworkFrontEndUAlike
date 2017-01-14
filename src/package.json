@@ -23,5 +23,8 @@
     "gulp-util": "^3.0.8",
     "gulp.spritesmith": "^6.3.0",
     "pug": "^2.0.0-beta6"
+  },
+  "dependencies": {
+    "normalize.css": "^5.0.0"
   }
 }
