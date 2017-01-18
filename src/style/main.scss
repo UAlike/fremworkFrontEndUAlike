@@ -1,4 +1,5 @@
 // Includes all styles
+// Supports glob patterns imports
 
 @import "modules/sprite"; // variables and mixins for sprite 'gulp.spritesmith'
 
@@ -9,7 +10,7 @@
 @import "variables";
 
 //Mixins:
-@import "mixins/buttons";
+@import "mixins/**/*.scss";
 
 //Helpers:
 @import "../node_modules/normalize.css/normalize";
@@ -20,7 +21,8 @@
 // last - pages - the specific styles for the set of building blocks
 
 
-@import "modules/buttons";
-@import "components/navbar";
-@import "partials/footer";
-@import "pages/index";
+@import "modules/**/*.scss";
+@import "components/**/*.scss";
+@import "partials/**/*.scss";
+@import "pages/**/*.scss";
+

@@ -6,7 +6,8 @@ let gulp = require('gulp'),
     gulpif = require('gulp-if'),
     emitty = require('emitty').setup('template', 'pug'),
     browserSync = require('browser-sync'),
-    reload = browserSync.reload;
+    reload = browserSync.reload,
+    sassGlob = require('gulp-sass-glob');
 
 // production mode (see build task)
 const isProduction = false;
@@ -92,6 +93,7 @@ gulp.task('styles:app', () => {
   log('Building application styles..');
   return gulp.src(source.styles.app)
     .pipe($.if(useSourceMaps, $.sourcemaps.init()))
+    .pipe(sassGlob())
     .pipe($.sass())
     .on('error', handleError)
     .pipe($.if(isProduction, $.cssnano({
