@@ -11,7 +11,7 @@ Styles directory:
 ----/partials       : partials of the page
 --variables.less    : less file with custom variables
 --main.less         : main less file, that is the entry point for css compilation
-</pre>
+</pre>  
 
 Templates directory:
 Pug templates folder
