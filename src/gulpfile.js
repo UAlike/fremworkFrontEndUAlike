@@ -190,8 +190,8 @@ gulp.task('assets', [
 
 // default (no minify)
 gulp.task('default', gulpsync.sync([
-  'webserver',
   'assets',
+  'webserver',
   'watch'
 ]));
 
