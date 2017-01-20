@@ -110,7 +110,14 @@ gulp.task('images:app', () => {
   log('Copy all images from root folder');
 
   return gulp.src(source.images.app)
-    .pipe(gulp.dest(build.images));
+    .pipe($.imagemin({
+      progressive: true,
+      svgoPlugins: [{removeViewBox: false}],
+      use: [$.imageminPngquant()],
+      interlaced: true
+    }))
+    .pipe(gulp.dest(build.images))
+    .pipe(reload({stream: true}));
 });
 
 // Sprite images
