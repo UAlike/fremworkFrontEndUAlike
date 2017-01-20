@@ -3,11 +3,9 @@ let gulp = require('gulp'),
     path = require('path'),
     $ = require('gulp-load-plugins')(),
     gulpsync = $.sync(gulp),
-    gulpif = require('gulp-if'),
     emitty = require('emitty').setup('template', 'pug'),
     browserSync = require('browser-sync'),
-    reload = browserSync.reload,
-    sassGlob = require('gulp-sass-glob');
+    reload = browserSync.reload
 
 // production mode (see build task)
 const isProduction = false;
@@ -93,7 +91,7 @@ gulp.task('styles:app', () => {
   log('Building application styles..');
   return gulp.src(source.styles.app)
     .pipe($.if(useSourceMaps, $.sourcemaps.init()))
-    .pipe(sassGlob())
+    .pipe($.sassGlob())
     .pipe($.sass())
     .on('error', handleError)
     .pipe($.if(isProduction, $.cssnano({
@@ -134,7 +132,7 @@ gulp.task('templates:static', () => {
   new Promise((resolve, reject) => {
     emitty.scan(global.changedStyleFile).then(() => {
       gulp.src(source.template.page)
-        .pipe(gulpif(global.watch, emitty.filter(global.emittyChangedFile)))
+        .pipe($.if(global.watch, emitty.filter(global.emittyChangedFile)))
         .pipe($.pug({ pretty: true }).on('error', handleError))
         .pipe(gulp.dest(build.template.static))
         .on('end', resolve)
