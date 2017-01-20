@@ -5,7 +5,7 @@ let gulp = require('gulp'),
     gulpsync = $.sync(gulp),
     emitty = require('emitty').setup('template', 'pug'),
     browserSync = require('browser-sync'),
-    reload = browserSync.reload
+    reload = browserSync.reload;
 
 // production mode (see build task)
 const isProduction = false;
@@ -108,9 +108,10 @@ gulp.task('styles:app', () => {
 // ----------------------------------------------------------
 gulp.task('images:app', () => {
   log('Copy all images from root folder');
-
   return gulp.src(source.images.app)
-    .pipe(gulp.dest(build.images));
+    .pipe($.imagemin())
+    .pipe(gulp.dest(build.images))
+    .pipe(reload({stream: true}));
 });
 
 // Sprite images
