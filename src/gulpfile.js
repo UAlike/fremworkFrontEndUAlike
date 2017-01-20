@@ -41,7 +41,7 @@ let paths = {
 let source = {
   index: '../',
   template: {
-    page:     paths.template + 'pages/*.pug',
+    page:     paths.template + '/*.pug',
     watch:    paths.template + '**/*'
   },
   styles: {
@@ -77,7 +77,7 @@ let supported = [
 ];
 
 
-//-- TASKS
+// TASKS
 //---------------
 
 // Start server
@@ -104,8 +104,8 @@ gulp.task('styles:app', () => {
     }));
 });
 
-// Images TODO: Need to add images optimization and add watch
-// ----------------------------------------------------------
+// Images optimization and copy to dist
+// --------------------------------------
 gulp.task('images:app', () => {
   log('Copy all images from root folder');
   return gulp.src(source.images.app)
@@ -128,6 +128,8 @@ gulp.task('images:sprite', () => {
   spriteData.css.pipe(gulp.dest(paths.styles + 'modules'));
 });
 
+// Templates, static
+// -----------------
 gulp.task('templates:static', () => {
   log('Building application static templates..');
   new Promise((resolve, reject) => {
@@ -147,7 +149,7 @@ gulp.task('templates:static', () => {
 
 
 // WATCH
-//---------------
+//-------
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
@@ -178,27 +180,23 @@ gulp.task('usesources', function() {
 // Main Tasks
 // ----------
 gulp.task('assets', [
-  //'scripts:app',
   'images:app',
   'images:sprite',
   'styles:app',
   'templates:static'
-  //'templates:index',
-  //'templates:views',
-  //'fonts:app'
 ]);
 
 
 // default (no minify)
+// --------------------
 gulp.task('default', gulpsync.sync([
   'assets',
   'webserver',
   'watch'
 ]));
 
-///////////////////////
 // Error handler
-//---------------------
+// ---------------
 function handleError(err) {
   log(err.toString());
   this.emit('end');
