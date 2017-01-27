@@ -16,7 +16,7 @@ Tasks avaliable from the box:
 ##Quick installation
 
 1. Clone project from github
-2. Install dependencies `npm install`
+2. Install dependencies `npm install` or `yarn install` 
 3. Run gulp default task `gulp`
 
 ##File structure
