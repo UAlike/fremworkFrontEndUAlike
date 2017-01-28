@@ -50,7 +50,10 @@ let source = {
   },
   images: {
     app: [paths.images + '*.*'],
-    sprite: [paths.images + 'sprite/**/*.png']
+    sprite: {
+      img: [paths.images + 'sprites/type-img/**/*.*'],
+      svg: [paths.images + 'sprites/type-svg/**/*.svg']
+    }
   }
 };
 
@@ -118,8 +121,7 @@ gulp.task('images:app', () => {
 // -------------
 gulp.task('images:sprite', () => {
   log('Bilding Sprite images');
-
-  var spriteData = gulp.src(source.images.sprite).pipe($.spritesmith({
+  var spriteData = gulp.src(source.images.sprite.img).pipe($.spritesmith({
     imgName: 'sprite.png',
     cssName: '_sprite.scss'
   }));
@@ -128,6 +130,36 @@ gulp.task('images:sprite', () => {
   spriteData.css.pipe(gulp.dest(paths.styles + 'modules'));
 });
 
+// Sprite SVG
+// ----------
+gulp.task('svg:sprite', () => {
+  log('Bilding Sprite SVG');
+  return gulp.src(source.images.sprite.svg)
+    .pipe($.svgmin({
+      js2svg: {
+        pretty: true
+      }
+    }))
+    .pipe($.cheerio({
+      run: ($) => {
+        $('[fill]').removeAttr('fill');
+        $('[style]').removeAttr('style');
+      },
+      parserOptions: { xmlMode: true }
+    }))
+    .pipe($.replace('&gt;', '>'))
+    //build svg sprite
+    .pipe($.svgSprites({
+        mode: "symbols",
+        preview: false,
+        svg: {
+          symbols: "sprite.html"
+        }
+      }
+    ))
+    .pipe(gulp.dest(build.images))
+    .pipe(reload({stream: true}))
+});
 // Templates, static
 // -----------------
 gulp.task('templates:static', () => {
@@ -182,6 +214,7 @@ gulp.task('usesources', function() {
 gulp.task('assets', [
   'images:app',
   'images:sprite',
+  'svg:sprite',
   'styles:app',
   'templates:static'
 ]);
