@@ -1,11 +1,12 @@
 //noinspection JSUnresolvedFunction
 let gulp = require('gulp'),
-    path = require('path'),
-    $ = require('gulp-load-plugins')(),
-    gulpsync = $.sync(gulp),
-    emitty = require('emitty').setup('template', 'pug'),
-    browserSync = require('browser-sync'),
-    reload = browserSync.reload;
+  path = require('path'),
+  $ = require('gulp-load-plugins')(),
+  gulpsync = $.sync(gulp),
+  pngquant = require('imagemin-pngquant'),
+  emitty = require('emitty').setup('template', 'pug'),
+  browserSync = require('browser-sync'),
+  reload = browserSync.reload;
 
 // production mode (see build task)
 const isProduction = false;
@@ -32,6 +33,7 @@ let paths = {
   template: 'template/',
   styles: 'style/',
   components: 'app/',
+  scripts: 'js/',
   images: 'images/',
   fonts: 'fonts/'
 };
@@ -48,9 +50,18 @@ let source = {
     app:    [paths.styles + '*.*'],
     watch:  [paths.styles + '**/*']
   },
+  scripts: {
+    app : [paths.scripts + '*.js'],
+    watch:  [paths.scripts + '**/*']
+  },
   images: {
     app: [paths.images + '*.*'],
-    sprite: [paths.images + 'sprite/**/*.png']
+    sprite: [paths.images + 'sprite/**/*.png'],
+    watch: [paths.images + '**/*']
+  },
+  fonts: {
+    app:    [paths.fonts + '**/*'],
+    watch:  [paths.fonts + '**/*']
   }
 };
 
@@ -60,8 +71,10 @@ let build = {
   template:{
     static: paths.app
   },
+  scripts: paths.app + 'js',
   styles: paths.app + 'css',
   images: paths.app + 'images',
+  fonts: paths.app + 'fonts'
 };
 
 
@@ -82,6 +95,7 @@ let supported = [
 
 // Start server
 gulp.task('webserver', () => {
+  log('Staring webserver ♥️');
   browserSync(config);
 });
 
@@ -109,18 +123,31 @@ gulp.task('styles:app', () => {
 gulp.task('images:app', () => {
   log('Copy all images from root folder');
   return gulp.src(source.images.app)
-    .pipe($.imagemin())
+    .pipe($.imagemin(
+      {
+        progressive: true,
+        use: [pngquant()]
+      }
+    ))
     .pipe(gulp.dest(build.images))
     .pipe(reload({stream: true}));
 });
 
+// Fonts copy
+// ----------
+gulp.task('fonts:copy', () => {
+  log('Copy all fonts');
+  return gulp.src(source.fonts.app)
+    .pipe(gulp.dest(build.fonts))
+    .pipe(reload({stream: true}));
+});
 // Sprite images
 // -------------
 gulp.task('images:sprite', () => {
   log('Bilding Sprite images');
 
   var spriteData = gulp.src(source.images.sprite).pipe($.spritesmith({
-    imgName: 'sprite.png',
+    imgName: '../images/sprite.png',
     cssName: '_sprite.scss'
   }));
 
@@ -147,48 +174,52 @@ gulp.task('templates:static', () => {
   })
 });
 
+gulp.task('js:build', function () {
+  log('Optimization JS');
+  gulp.src(source.scripts.app)
+    .pipe($.concat('scripts.js'))
+    .pipe(gulp.dest(build.scripts))
+    .pipe($.rename('scripts.min.js'))
+    .pipe($.uglify().on('error', handleError))
+    .pipe(gulp.dest(build.scripts))
+    .pipe(reload({stream: true}));
+});
 
 // WATCH
 //-------
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-  log('Watching source files..');
+  log('Watching source files...');
 
   gulp.watch(source.styles.watch, ['styles:app']);
+  gulp.watch(source.scripts.watch, ['js:build']);
   gulp.watch(source.template.watch, ['templates:static']);
+  gulp.watch(source.fonts.watch, ['fonts:copy']);
+  gulp.watch(source.images.watch, ['images:app']);
+  gulp.watch(source.images.sprite, ['images:sprite']);
 
 });
 
-// Serve files with auto reaload
-gulp.task('browsersync', function() {
-  log('Starting BrowserSync..');
-
-  browserSync({
-    notify: false,
-    port: 3010,
-    server: {
-      baseDir: '..'
-    }
-  });
-
-});
 
 gulp.task('usesources', function() {
   useSourceMaps = true;
 });
+
 // Main Tasks
 // ----------
 gulp.task('assets', [
   'images:app',
   'images:sprite',
+  'js:build',
+  'fonts:copy',
   'styles:app',
   'templates:static'
 ]);
 
 
-// default (no minify)
-// --------------------
+// default
+// -------
 gulp.task('default', gulpsync.sync([
   'assets',
   'webserver',
